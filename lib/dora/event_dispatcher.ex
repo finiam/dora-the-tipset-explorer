@@ -17,6 +17,30 @@ defmodule Dora.EventDispatcher do
     |> handle(contract_address, {abi_selector, decoded_event}, original_event)
   end
 
+  def handle("bond_created", "0x60361121f74ce943d5cafe0fbb98315a2eb2095b", event) do
+    Dora.Handlers.Contracts.ChickenBondManager.apply(
+      "bond_created",
+      "0x60361121f74ce943d5cafe0fbb98315a2eb2095b",
+      event
+    )
+  end
+
+  def handle("bond_claimed", "0x60361121f74ce943d5cafe0fbb98315a2eb2095b", event) do
+    Dora.Handlers.Contracts.ChickenBondManager.apply(
+      "bond_claimed",
+      "0x60361121f74ce943d5cafe0fbb98315a2eb2095b",
+      event
+    )
+  end
+
+  def handle("bond_cancelled", "0x60361121f74ce943d5cafe0fbb98315a2eb2095b", event) do
+    Dora.Handlers.Contracts.ChickenBondManager.apply(
+      "bond_cancelled",
+      "0x60361121f74ce943d5cafe0fbb98315a2eb2095b",
+      event
+    )
+  end
+
   def handle("storage_provider_deposit", "0xb27d23387324401f829c8c0b73a3df10a72c4080", event) do
     Dora.Handlers.Contracts.Pool.apply(
       "storage_provider_deposit",
@@ -39,14 +63,6 @@ defmodule Dora.EventDispatcher do
       "0xb27d23387324401f829c8c0b73a3df10a72c4080",
       event
     )
-  end
-
-  # If we want to deal with the event without worrying on the address
-  # Default behaviour for all Transfer events
-  #
-  # Remove this if you don't need it in your handlers
-  def handle("transfer", address, event, original_event) do
-    Dora.Handlers.Defaults.Transfer.apply(address, event, original_event)
   end
 
   def handle("pool_updated", address, event) do

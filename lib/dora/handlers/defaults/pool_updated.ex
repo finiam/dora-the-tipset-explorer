@@ -8,7 +8,7 @@ defmodule Dora.Handlers.Defaults.PoolUpdated do
     topics_map = Utils.build_topics_maps(topics)
 
     pool_updated = %{
-      storage_provider: topics_map["storageProvider"],
+      storage_provider_owner: topics_map["storageProviderOwner"],
       pool: topics_map["pool"],
       amount: topics_map["amount"]
     }
@@ -30,7 +30,7 @@ defmodule Dora.Handlers.Defaults.PoolUpdated do
           |> Decimal.to_string()
         end)
 
-      Projections.update_event_projection(address, %{
+      Projections.update_event_projection(projection.contract_address, address, "loan", %{
         projection_fields: projection_fields
       })
     end)
