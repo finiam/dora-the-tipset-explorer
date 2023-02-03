@@ -1,7 +1,7 @@
 defmodule Dora.Handlers.Defaults.PoolUpdated do
   require Logger
 
-  alias Dora.{Events, Repo}
+  alias Dora.{Events, Projections, Repo}
   alias Dora.Handlers.Utils
 
   def apply(address, {_function, topics}) do
@@ -18,6 +18,20 @@ defmodule Dora.Handlers.Defaults.PoolUpdated do
         event_type: "pool_updated",
         contract_address: address,
         event_args: pool_updated
+      })
+
+      projection =
+        Projections.get_event_projection_by(projection_id: address, projection_type: "loan")
+
+      projection_fields =
+        Map.update(projection.projection_fields, "repaid_amount", "0", fn old_amount ->
+          Decimal.new(old_amount)
+          |> Decimal.add(Decimal.new(topics_map["amount"]))
+          |> Decimal.to_string()
+        end)
+
+      Projections.update_event_projection(address, %{
+        projection_fields: projection_fields
       })
     end)
     |> case do

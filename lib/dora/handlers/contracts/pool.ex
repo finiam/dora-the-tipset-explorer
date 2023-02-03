@@ -1,7 +1,7 @@
 defmodule Dora.Handlers.Contracts.Pool do
   require Logger
 
-  alias Dora.{Events, Repo}
+  alias Dora.{Events, Projections, Repo}
   alias Dora.Handlers.Utils
 
   def apply("lender_deposit", address, {_function, topics}) do
@@ -41,6 +41,17 @@ defmodule Dora.Handlers.Contracts.Pool do
         event_type: "new_broker_deployed",
         contract_address: address,
         event_args: new_broker_deployed
+      })
+
+      Projections.create_event_projection(%{
+        projection_type: "loan",
+        projection_id: topics_map["broker"],
+        projection_fields: %{
+          owner: topics_map["storageProviderOwner"],
+          total_amount: topics_map["amount"],
+          repaid_amount: "0"
+        },
+        contract_address: address
       })
     end)
     |> case do
