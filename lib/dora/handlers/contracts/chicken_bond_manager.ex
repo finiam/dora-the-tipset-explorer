@@ -110,7 +110,6 @@ defmodule Dora.Handlers.Contracts.ChickenBondManager do
           }
         }
       )
-      |> IO.inspect()
     end)
     |> case do
       {:ok, _} = result -> result
