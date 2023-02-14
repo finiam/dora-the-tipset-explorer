@@ -2,7 +2,7 @@ defmodule Dora.Handlers.Contracts.ChickenBondManager do
   require Logger
 
   alias Dora.{Events, Projections, Repo}
-  alias Dora.Handlers.Utils
+  alias Dora.Utils
 
   def apply("bond_cancelled", address, {_function, topics}) do
     topics_map = Utils.build_topics_maps(topics)

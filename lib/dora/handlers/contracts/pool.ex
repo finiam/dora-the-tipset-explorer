@@ -2,7 +2,7 @@ defmodule Dora.Handlers.Contracts.Pool do
   require Logger
 
   alias Dora.{Events, Projections, Repo}
-  alias Dora.Handlers.Utils
+  alias Dora.Utils
 
   def apply("lender_deposit", address, {_function, topics}) do
     topics_map = Utils.build_topics_maps(topics)

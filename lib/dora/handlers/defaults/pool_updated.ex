@@ -2,7 +2,7 @@ defmodule Dora.Handlers.Defaults.PoolUpdated do
   require Logger
 
   alias Dora.{Events, Projections, Repo}
-  alias Dora.Handlers.Utils
+  alias Dora.Utils
 
   def apply(address, {_function, topics}) do
     topics_map = Utils.build_topics_maps(topics)
