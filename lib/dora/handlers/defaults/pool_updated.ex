@@ -4,7 +4,7 @@ defmodule Dora.Handlers.Defaults.PoolUpdated do
   alias Dora.{Events, Projections, Repo}
   alias Dora.Utils
 
-  def apply(address, {_function, topics}) do
+  def apply(address, {_function, topics}, original_event) do
     topics_map = Utils.build_topics_maps(topics)
 
     pool_updated = %{
@@ -17,7 +17,10 @@ defmodule Dora.Handlers.Defaults.PoolUpdated do
       Events.create_event(%{
         event_type: "pool_updated",
         contract_address: address,
-        event_args: pool_updated
+        event_args: pool_updated,
+        block_hash: original_event["blockHash"],
+        tx_hash: original_event["transactionHash"],
+        log_index: original_event["logIndex"]
       })
 
       projection =

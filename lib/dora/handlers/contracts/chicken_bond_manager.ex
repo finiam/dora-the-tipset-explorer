@@ -4,7 +4,7 @@ defmodule Dora.Handlers.Contracts.ChickenBondManager do
   alias Dora.{Events, Projections, Repo}
   alias Dora.Utils
 
-  def apply("bond_cancelled", address, {_function, topics}) do
+  def apply("bond_cancelled", address, {_function, topics}, original_event) do
     topics_map = Utils.build_topics_maps(topics)
 
     bond_cancelled = %{
@@ -19,7 +19,10 @@ defmodule Dora.Handlers.Contracts.ChickenBondManager do
       Events.create_event(%{
         event_type: "bond_cancelled",
         contract_address: address,
-        event_args: bond_cancelled
+        event_args: bond_cancelled,
+        block_hash: original_event["blockHash"],
+        tx_hash: original_event["transactionHash"],
+        log_index: original_event["logIndex"]
       })
 
       projection =
@@ -41,7 +44,7 @@ defmodule Dora.Handlers.Contracts.ChickenBondManager do
     end
   end
 
-  def apply("bond_claimed", address, {_function, topics}) do
+  def apply("bond_claimed", address, {_function, topics}, original_event) do
     topics_map = Utils.build_topics_maps(topics)
 
     bond_claimed = %{
@@ -58,7 +61,10 @@ defmodule Dora.Handlers.Contracts.ChickenBondManager do
       Events.create_event(%{
         event_type: "bond_claimed",
         contract_address: address,
-        event_args: bond_claimed
+        event_args: bond_claimed,
+        block_hash: original_event["blockHash"],
+        tx_hash: original_event["transactionHash"],
+        log_index: original_event["logIndex"]
       })
 
       projection =
@@ -80,7 +86,7 @@ defmodule Dora.Handlers.Contracts.ChickenBondManager do
     end
   end
 
-  def apply("bond_created", address, {_function, topics}) do
+  def apply("bond_created", address, {_function, topics}, original_event) do
     topics_map = Utils.build_topics_maps(topics)
     id = topics_map["bondId"]
 
@@ -94,7 +100,10 @@ defmodule Dora.Handlers.Contracts.ChickenBondManager do
       Events.create_event(%{
         event_type: "bond_created",
         contract_address: address,
-        event_args: bond_created
+        event_args: bond_created,
+        block_hash: original_event["blockHash"],
+        tx_hash: original_event["transactionHash"],
+        log_index: original_event["logIndex"]
       })
 
       Projections.insert_or_update_event_projection(

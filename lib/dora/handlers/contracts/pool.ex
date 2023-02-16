@@ -4,7 +4,7 @@ defmodule Dora.Handlers.Contracts.Pool do
   alias Dora.{Events, Projections, Repo}
   alias Dora.Utils
 
-  def apply("lender_deposit", address, {_function, topics}) do
+  def apply("lender_deposit", address, {_function, topics}, original_event) do
     topics_map = Utils.build_topics_maps(topics)
 
     lender_deposit = %{
@@ -16,7 +16,10 @@ defmodule Dora.Handlers.Contracts.Pool do
       Events.create_event(%{
         event_type: "lender_deposit",
         contract_address: address,
-        event_args: lender_deposit
+        event_args: lender_deposit,
+        block_hash: original_event["blockHash"],
+        tx_hash: original_event["transactionHash"],
+        log_index: original_event["logIndex"]
       })
     end)
     |> case do
@@ -25,7 +28,7 @@ defmodule Dora.Handlers.Contracts.Pool do
     end
   end
 
-  def apply("new_broker_deployed", address, {_function, topics}) do
+  def apply("new_broker_deployed", address, {_function, topics}, original_event) do
     topics_map = Utils.build_topics_maps(topics)
 
     new_broker_deployed = %{
@@ -40,7 +43,10 @@ defmodule Dora.Handlers.Contracts.Pool do
       Events.create_event(%{
         event_type: "new_broker_deployed",
         contract_address: address,
-        event_args: new_broker_deployed
+        event_args: new_broker_deployed,
+        block_hash: original_event["blockHash"],
+        tx_hash: original_event["transactionHash"],
+        log_index: original_event["logIndex"]
       })
 
       Projections.create_event_projection(%{
@@ -64,7 +70,7 @@ defmodule Dora.Handlers.Contracts.Pool do
     end
   end
 
-  def apply("storage_provider_deposit", address, {_function, topics}) do
+  def apply("storage_provider_deposit", address, {_function, topics}, original_event) do
     topics_map = Utils.build_topics_maps(topics)
 
     storage_provider_deposit = %{
@@ -76,7 +82,10 @@ defmodule Dora.Handlers.Contracts.Pool do
       Events.create_event(%{
         event_type: "storage_provider_deposit",
         contract_address: address,
-        event_args: storage_provider_deposit
+        event_args: storage_provider_deposit,
+        block_hash: original_event["blockHash"],
+        tx_hash: original_event["transactionHash"],
+        log_index: original_event["logIndex"]
       })
     end)
     |> case do
